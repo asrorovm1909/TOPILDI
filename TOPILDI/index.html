@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TOPILDI — Потерял? Найдём!</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#"><span class="brand-mark">T</span> TOPILDI</a>
+    <nav>
+      <a href="#listings" data-i18n="navListings">Объявления</a>
+      <a href="#how" data-i18n="navHow">Как это работает</a>
+    </nav>
+    <div class="header-actions">
+      <button class="lang active" data-lang="ru">RU</button>
+      <button class="lang" data-lang="uz">UZ</button>
+      <a class="btn btn-small" href="#post" data-i18n="postBtn">+ Подать объявление</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-content">
+        <div class="eyebrow"><span></span><span data-i18n="eyebrow">СООБЩЕСТВО ПОМОЩИ</span></div>
+        <h1 data-i18n="heroTitle">Потерял? <em>Найдём.</em></h1>
+        <p data-i18n="heroText">Место, где потерянные вещи возвращаются к своим владельцам. Размести объявление — возможно, кто-то уже нашёл твою вещь.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#listings" data-i18n="seeListings">Смотреть объявления</a>
+          <a class="btn btn-ghost" href="#post" data-i18n="createPost">Разместить бесплатно</a>
+        </div>
+        <div class="hero-note"><span class="live-dot"></span><span data-i18n="noAccount">Без регистрации и входа</span></div>
+      </div>
+      <div class="hero-art">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="glass-card">
+          <div class="glass-icon">⌕</div>
+          <b>TOPILDI</b>
+          <small data-i18n="heroBadge">Вещи находят дорогу домой</small>
+          <div class="glass-line"></div>
+          <div class="glass-bottom">● <span data-i18n="community">Помогаем друг другу</span></div>
+        </div>
+        <div class="float-tag tag-one">🔑 <span data-i18n="keys">Ключи</span></div>
+        <div class="float-tag tag-two">🎒 <span data-i18n="bag">Рюкзак</span></div>
+      </div>
+    </section>
+
+    <section class="stats">
+      <div><strong>TOPILDI</strong><span data-i18n="statBrand">платформа находок</span></div>
+      <div><strong>01</strong><span data-i18n="statFree">Бесплатные объявления</span></div>
+      <div><strong>24/7</strong><span data-i18n="statOpen">Доступна каждому</span></div>
+    </section>
+
+    <section class="section" id="post">
+      <div class="section-heading">
+        <div><span class="eyebrow dark" data-i18n="postEyebrow">ПОМОГИ ВЕЩИ НАЙТИСЬ</span><h2 data-i18n="postTitle">Подать объявление</h2></div>
+        <span class="section-count" data-i18n="freeLabel">БЕСПЛАТНО</span>
+      </div>
+
+      <form id="listingForm" class="post-form">
+        <div class="type-switch">
+          <label class="type-option selected"><input type="radio" name="type" value="lost" checked><span>⌕</span><b data-i18n="lost">Потерял</b></label>
+          <label class="type-option"><input type="radio" name="type" value="found"><span>✓</span><b data-i18n="found">Нашёл</b></label>
+        </div>
+        <div class="form-grid">
+          <label><span data-i18n="fieldTitle">Название вещи *</span><input name="title" required maxlength="80" placeholder="Например: Чёрный кошелёк"></label>
+          <label><span data-i18n="fieldCategory">Категория *</span>
+            <select name="category" required>
+              <option value="" data-i18n="choose">Выберите категорию</option>
+              <option value="Документы" data-i18n="catDocs">Документы</option>
+              <option value="Электроника" data-i18n="catTech">Электроника</option>
+              <option value="Одежда и сумки" data-i18n="catClothes">Одежда и сумки</option>
+              <option value="Ключи" data-i18n="catKeys">Ключи</option>
+              <option value="Животные" data-i18n="catPets">Животные</option>
+              <option value="Другое" data-i18n="catOther">Другое</option>
+            </select>
+          </label>
+          <label class="full"><span data-i18n="fieldDescription">Описание</span><textarea name="description" rows="3" maxlength="1000"></textarea></label>
+          <label><span data-i18n="fieldLocation">Место *</span><input name="location" required maxlength="120" placeholder="Город, район, улица"></label>
+          <label><span data-i18n="fieldContact">Контакт для связи *</span><input name="contact" required maxlength="120" placeholder="+998... или Telegram"></label>
+          <label class="full"><span data-i18n="fieldPhoto">Фото (необязательно)</span><input name="photo" type="file" accept="image/*"><small data-i18n="photoHint">До 5 МБ.</small></label>
+        </div>
+        <button class="btn submit-btn" id="submitBtn" type="submit" data-i18n="publish">Опубликовать объявление →</button>
+        <p class="form-message" id="formMessage"></p>
+      </form>
+    </section>
+
+    <section class="section listings-section" id="listings">
+      <div class="section-heading">
+        <div><span class="eyebrow dark" data-i18n="feedEyebrow">СВЕЖИЕ ИСТОРИИ</span><h2 data-i18n="feedTitle">Объявления</h2></div>
+        <span class="section-count" id="listingCount">0</span>
+      </div>
+      <div class="filters">
+        <div class="search-box"><span>⌕</span><input id="searchInput" data-i18n-placeholder="searchPlaceholder" placeholder="Поиск по названию или месту..."></div>
+        <select id="typeFilter">
+          <option value="all" data-i18n="allTypes">Все объявления</option>
+          <option value="lost" data-i18n="lostOnly">Потерянные</option>
+          <option value="found" data-i18n="foundOnly">Найденные</option>
+        </select>
+        <select id="categoryFilter">
+          <option value="all" data-i18n="allCategories">Все категории</option>
+          <option value="Документы" data-i18n="catDocs">Документы</option>
+          <option value="Электроника" data-i18n="catTech">Электроника</option>
+          <option value="Одежда и сумки" data-i18n="catClothes">Одежда и сумки</option>
+          <option value="Ключи" data-i18n="catKeys">Ключи</option>
+          <option value="Животные" data-i18n="catPets">Животные</option>
+          <option value="Другое" data-i18n="catOther">Другое</option>
+        </select>
+      </div>
+      <div id="listingsGrid" class="listings-grid"><div class="loading">Загружаем объявления...</div></div>
+    </section>
+
+    <section class="how" id="how">
+      <div><span class="eyebrow">TOPILDI</span><h2 data-i18n="howTitle">Добрые дела начинаются с простого шага.</h2></div>
+      <div class="steps">
+        <div><b>01</b><h3 data-i18n="step1Title">Опубликуй</h3><p data-i18n="step1Text">Расскажи, что потерял или нашёл.</p></div>
+        <div><b>02</b><h3 data-i18n="step2Title">Найди</h3><p data-i18n="step2Text">Ищи объявления или жди отклика.</p></div>
+        <div><b>03</b><h3 data-i18n="step3Title">Верни</h3><p data-i18n="step3Text">Помоги вещи вернуться домой.</p></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a class="brand" href="#"><span class="brand-mark">T</span> TOPILDI</a>
+    <span data-i18n="footerText">Каждая находка — чья-то радость.</span>
+    <span>© 2026 TOPILDI</span>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
